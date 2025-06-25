@@ -43,8 +43,3 @@ Aceasta este o aplicație mobilă **React Native** dezvoltată cu **Expo** și *
 - Ștergere cont
 
 ---
-
-## 🔗 API Backend
-
-Folosește un backend Node.js găzduit pe:
-
