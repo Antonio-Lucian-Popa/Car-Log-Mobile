@@ -1,75 +1,381 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import Card from '@/components/Card';
+import EmptyState from '@/components/EmptyState';
+import LoadingScreen from '@/components/LoadingScreen';
+import Colors from '@/constants/Colors';
+import { useCarStore } from '@/stores/carStore';
+import { useFuelStore } from '@/stores/fuelStore';
+import { useReminderStore } from '@/stores/reminderStore';
+import { useRepairStore } from '@/stores/repairStore';
+import { useRouter } from 'expo-router';
+import {
+  AlertTriangle,
+  Bell,
+  Droplet,
+  Wrench
+} from 'lucide-react-native';
+import React from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+export default function DashboardScreen() {
+  const router = useRouter();
+  const [refreshing, setRefreshing] = React.useState(false);
+  
+  const { cars, selectedCar, isLoading: carsLoading } = useCarStore();
+  const { latestFuel, fetchLatestFuel, isLoading: fuelLoading } = useFuelStore();
+  const { latestRepair, fetchLatestRepair, isLoading: repairLoading } = useRepairStore();
+  const { activeReminders, fetchActiveReminders, isLoading: remindersLoading } = useReminderStore();
+  
+  const isLoading = carsLoading || fuelLoading || repairLoading || remindersLoading;
+  
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await Promise.all([
+      fetchLatestFuel(),
+      fetchLatestRepair(),
+      fetchActiveReminders(),
+    ]);
+    setRefreshing(false);
+  }, []);
+  
+  if (isLoading && !refreshing) {
+    return <LoadingScreen message="Loading dashboard..." />;
+  }
+  
+  if (cars.length === 0) {
+    return (
+      <EmptyState
+        title="No Cars Found"
+        message="Add your first car to start tracking expenses"
+        buttonTitle="Add a Car"
+        onButtonPress={() => router.push('/cars/add')}
+      />
+    );
+  }
+  
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+  
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View style={styles.header}>
+        <Text style={styles.title}>Dashboard</Text>
+        <Text style={styles.subtitle}>
+          {selectedCar ? `${selectedCar.name} ${selectedCar.model}` : 'All Cars'}
+        </Text>
+      </View>
+      
+      {/* Latest Fuel Entry */}
+      <Card title="Latest Fuel Entry">
+        {latestFuel ? (
+          <TouchableOpacity 
+            style={styles.cardContent}
+            onPress={() => router.push('/fuel')}
+          >
+            <View style={styles.iconContainer}>
+              <Droplet size={24} color={Colors.primary} />
+            </View>
+            <View style={styles.detailsContainer}>
+              <Text style={styles.detailTitle}>{latestFuel.station}</Text>
+              <Text style={styles.detailSubtitle}>
+                {formatDate(latestFuel.date)}
+              </Text>
+              <View style={styles.statsRow}>
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>Liters</Text>
+                  <Text style={styles.statValue}>{latestFuel.liters.toFixed(2)}</Text>
+                </View>
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>Price</Text>
+                  <Text style={styles.statValue}>
+                    ${latestFuel.totalPrice || (latestFuel.price * latestFuel.liters).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>Odometer</Text>
+                  <Text style={styles.statValue}>{latestFuel.odometer} km</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <EmptyState
+            title="No Fuel Entries"
+            buttonTitle="Add Fuel Entry"
+            onButtonPress={() => router.push('/fuel/add')}
+            style={styles.emptyStateSmall}
+          />
+        )}
+      </Card>
+      
+      {/* Latest Repair */}
+      <Card title="Latest Repair">
+        {latestRepair ? (
+          <TouchableOpacity 
+            style={styles.cardContent}
+            onPress={() => router.push('/repairs')}
+          >
+            <View style={styles.iconContainer}>
+              <Wrench size={24} color={Colors.secondary} />
+            </View>
+            <View style={styles.detailsContainer}>
+              <Text style={styles.detailTitle}>{latestRepair.category}</Text>
+              <Text style={styles.detailSubtitle}>
+                {formatDate(latestRepair.date)}
+              </Text>
+              <View style={styles.statsRow}>
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>Cost</Text>
+                  <Text style={styles.statValue}>${latestRepair.price.toFixed(2)}</Text>
+                </View>
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>Odometer</Text>
+                  <Text style={styles.statValue}>{latestRepair.odometer} km</Text>
+                </View>
+              </View>
+              <Text style={styles.description} numberOfLines={2}>
+                {latestRepair.description}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <EmptyState
+            title="No Repair Records"
+            buttonTitle="Add Repair"
+            onButtonPress={() => router.push('/repairs/add')}
+            style={styles.emptyStateSmall}
+          />
+        )}
+      </Card>
+      
+      {/* Active Reminders */}
+      <Card title="Active Reminders">
+        {activeReminders && activeReminders.length > 0 ? (
+          <View>
+            {activeReminders.slice(0, 3).map((reminder) => (
+              <TouchableOpacity
+                key={reminder.id}
+                style={styles.reminderItem}
+                onPress={() => router.push('/reminders')}
+              >
+                <View style={styles.reminderIconContainer}>
+                  <AlertTriangle size={20} color={Colors.warning} />
+                </View>
+                <View style={styles.reminderDetails}>
+                  <Text style={styles.reminderTitle}>{reminder.type}</Text>
+                  <Text style={styles.reminderDate}>
+                    Due: {formatDate(reminder.dueDate)}
+                  </Text>
+                  <Text style={styles.reminderDescription} numberOfLines={1}>
+                    {reminder.description}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+            
+            {activeReminders.length > 3 && (
+              <TouchableOpacity
+                style={styles.viewAllButton}
+                onPress={() => router.push('/reminders')}
+              >
+                <Text style={styles.viewAllText}>
+                  View All ({activeReminders.length})
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <EmptyState
+            title="No Active Reminders"
+            buttonTitle="Add Reminder"
+            onButtonPress={() => router.push('/reminders/add')}
+            style={styles.emptyStateSmall}
+          />
+        )}
+      </Card>
+      
+      {/* Quick Actions */}
+      <Card title="Quick Actions">
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => router.push('/fuel/add')}
+          >
+            <Droplet size={24} color={Colors.primary} />
+            <Text style={styles.actionText}>Add Fuel</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => router.push('/repairs/add')}
+          >
+            <Wrench size={24} color={Colors.secondary} />
+            <Text style={styles.actionText}>Add Repair</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => router.push('/reminders/add')}
+          >
+            <Bell size={24} color={Colors.warning} />
+            <Text style={styles.actionText}>Add Reminder</Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
   },
-  stepContainer: {
-    gap: 8,
+  contentContainer: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+  header: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.text,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    marginTop: 4,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  detailsContainer: {
+    flex: 1,
+  },
+  detailTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  detailSubtitle: {
+    fontSize: 14,
+    color: Colors.textSecondary,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  stat: {
+    flex: 1,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginBottom: 2,
+  },
+  statValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.text,
+  },
+  description: {
+    fontSize: 14,
+    color: Colors.text,
+    marginTop: 4,
+  },
+  emptyStateSmall: {
+    padding: 16,
+    height: 120,
+  },
+  reminderItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  reminderIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  reminderDetails: {
+    flex: 1,
+  },
+  reminderTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.text,
+  },
+  reminderDate: {
+    fontSize: 13,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  reminderDescription: {
+    fontSize: 13,
+    color: Colors.text,
+    marginTop: 2,
+  },
+  viewAllButton: {
+    alignItems: 'center',
+    paddingVertical: 12,
+    marginTop: 4,
+  },
+  viewAllText: {
+    fontSize: 14,
+    color: Colors.primary,
+    fontWeight: '500',
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 8,
+  },
+  actionButton: {
+    alignItems: 'center',
+    padding: 16,
+  },
+  actionText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: Colors.text,
   },
 });

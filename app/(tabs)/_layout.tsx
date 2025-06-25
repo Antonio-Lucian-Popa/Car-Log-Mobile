@@ -1,43 +1,117 @@
+import Colors from '@/constants/Colors';
+import { useCarStore } from '@/stores/carStore';
+import { useFuelStore } from '@/stores/fuelStore';
+import { useReminderStore } from '@/stores/reminderStore';
+import { useRepairStore } from '@/stores/repairStore';
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import {
+  Bell,
+  Car,
+  Droplet,
+  Home,
+  Settings,
+  Wrench
+} from 'lucide-react-native';
+import React, { useEffect } from 'react';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+  const { fetchCars } = useCarStore();
+  const { fetchLatestFuel } = useFuelStore();
+  const { fetchLatestRepair } = useRepairStore();
+  const { fetchActiveReminders } = useReminderStore();
+  
+  useEffect(() => {
+    // Fetch initial data when tabs are loaded
+    fetchCars();
+    fetchLatestFuel();
+    fetchLatestRepair();
+    fetchActiveReminders();
+  }, []);
+  
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.textSecondary,
+        tabBarStyle: {
+          backgroundColor: Colors.card,
+          borderTopColor: Colors.border,
+        },
+        headerStyle: {
+          backgroundColor: Colors.background,
+        },
+        headerTitleStyle: {
+          fontWeight: '600',
+          color: Colors.text,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Dashboard',
+          tabBarLabel: 'Dashboard',
+          tabBarIcon: ({ color, size }) => (
+            <Home size={size} color={color} />
+          ),
         }}
       />
+      
       <Tabs.Screen
-        name="explore"
+        name="cars"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'My Cars',
+          tabBarLabel: 'Cars',
+          tabBarIcon: ({ color, size }) => (
+            <Car size={size} color={color} />
+          ),
+        }}
+      />
+      
+      <Tabs.Screen
+        name="fuel"
+        options={{
+          title: 'Fuel Logs',
+          tabBarLabel: 'Fuel',
+          tabBarIcon: ({ color, size }) => (
+            <Droplet size={size} color={color} />
+          ),
+        }}
+      />
+      
+      <Tabs.Screen
+        name="repairs"
+        options={{
+          title: 'Repairs',
+          tabBarLabel: 'Repairs',
+          tabBarIcon: ({ color, size }) => (
+            <Wrench size={size} color={color} />
+          ),
+        }}
+      />
+      
+      <Tabs.Screen
+        name="reminders"
+        options={{
+          title: 'Reminders',
+          tabBarLabel: 'Reminders',
+          tabBarIcon: ({ color, size }) => (
+            <Bell size={size} color={color} />
+          ),
+        }}
+      />
+      
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <Settings size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

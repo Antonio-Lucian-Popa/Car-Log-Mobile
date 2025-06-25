@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+# 🚗 Car Logbook Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aceasta este o aplicație mobilă **React Native** dezvoltată cu **Expo** și **expo-router**, care permite gestionarea vehiculelor și a cheltuielilor auto (alimentări, reparații, remindere etc.).
 
-## Get started
+---
 
-1. Install dependencies
+## 📱 Tehnologii folosite
 
-   ```bash
-   npm install
-   ```
+- [Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [expo-router](https://expo.github.io/router/)
+- [Zustand](https://github.com/pmndrs/zustand)
+- [Axios](https://axios-http.com/)
+- [AsyncStorage](https://github.com/react-native-async-storage/async-storage)
+- [NativeWind](https://www.nativewind.dev/) pentru styling Tailwind-like
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🚀 Funcționalități principale
 
-In the output, you'll find options to open the app in a
+### ✅ Autentificare
+- Înregistrare și Login (JWT)
+- Stocare token în AsyncStorage
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 🚘 Mașini
+- Adăugare, editare, ștergere mașini
+- Afișare listă cu toate vehiculele
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### ⛽️ Alimentări
+- Înregistrare alimentări
+- Istoric alimentări pentru fiecare mașină
 
-## Get a fresh project
+### 🔧 Reparații
+- Adăugare reparații cu descriere, dată, cost
+- Statistici și listări
 
-When you're ready, run:
+### 🔔 Remindere
+- Notificări pentru ITP, RCA, schimb ulei etc.
+- Repeat + dueDate
 
-```bash
-npm run reset-project
-```
+### ⚙️ Setări
+- Logout
+- Ștergere cont
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🔗 API Backend
 
-To learn more about developing your project with Expo, look at the following resources:
+Folosește un backend Node.js găzduit pe:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
