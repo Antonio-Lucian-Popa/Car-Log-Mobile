@@ -8,7 +8,7 @@ export interface Car {
   id: string;
   name: string;
   model: string;
-  plateNumber: string;
+  numberPlate: string;
   year: number;
   fuelType: string;
 }
@@ -45,8 +45,9 @@ export interface Reminder {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: User;
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
 }
 
 export interface ApiError {

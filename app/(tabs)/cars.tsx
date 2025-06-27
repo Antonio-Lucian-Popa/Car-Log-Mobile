@@ -9,13 +9,13 @@ import { useRouter } from 'expo-router';
 import { Car as CarIcon, Trash2 } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function CarsScreen() {
@@ -87,7 +87,7 @@ export default function CarsScreen() {
           renderItem={({ item }) => (
             <ListItem
               title={`${item.name} ${item.model}`}
-              subtitle={`${item.year} • ${item.plateNumber} • ${item.fuelType}`}
+              subtitle={`${item.year} • ${item.numberPlate} • ${item.fuelType}`}
               leftIcon={<CarIcon size={24} color={Colors.primary} />}
               rightContent={
                 <TouchableOpacity

@@ -26,14 +26,14 @@ import {
 export default function DashboardScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = React.useState(false);
-  
+
   const { cars, selectedCar, isLoading: carsLoading } = useCarStore();
   const { latestFuel, fetchLatestFuel, isLoading: fuelLoading } = useFuelStore();
   const { latestRepair, fetchLatestRepair, isLoading: repairLoading } = useRepairStore();
   const { activeReminders, fetchActiveReminders, isLoading: remindersLoading } = useReminderStore();
-  
+
   const isLoading = carsLoading || fuelLoading || repairLoading || remindersLoading;
-  
+
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     await Promise.all([
@@ -43,11 +43,11 @@ export default function DashboardScreen() {
     ]);
     setRefreshing(false);
   }, []);
-  
+
   if (isLoading && !refreshing) {
     return <LoadingScreen message="Loading dashboard..." />;
   }
-  
+
   if (cars.length === 0) {
     return (
       <EmptyState
@@ -58,7 +58,7 @@ export default function DashboardScreen() {
       />
     );
   }
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -67,7 +67,22 @@ export default function DashboardScreen() {
       day: 'numeric',
     });
   };
-  
+
+  const formatValue = (value: number | undefined, decimals: number = 2) => {
+    return typeof value === 'number' ? value.toFixed(decimals) : 'N/A';
+  };
+
+  const calculateTotalPrice = () => {
+    if (typeof latestFuel?.totalPrice === 'number') return `$${formatValue(latestFuel.totalPrice)}`;
+    if (
+      typeof latestFuel?.price === 'number' &&
+      typeof latestFuel?.liters === 'number'
+    ) {
+      return `$${formatValue(latestFuel.price * latestFuel.liters)}`;
+    }
+    return 'N/A';
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -82,7 +97,7 @@ export default function DashboardScreen() {
           {selectedCar ? `${selectedCar.name} ${selectedCar.model}` : 'All Cars'}
         </Text>
       </View>
-      
+
       {/* Latest Fuel Entry */}
       <Card title="Latest Fuel Entry">
         {latestFuel ? (
@@ -101,17 +116,15 @@ export default function DashboardScreen() {
               <View style={styles.statsRow}>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Liters</Text>
-                  <Text style={styles.statValue}>{latestFuel.liters.toFixed(2)}</Text>
+                  <Text style={styles.statValue}>{formatValue(latestFuel.liters)}</Text>
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Price</Text>
-                  <Text style={styles.statValue}>
-                    ${latestFuel.totalPrice || (latestFuel.price * latestFuel.liters).toFixed(2)}
-                  </Text>
+                  <Text style={styles.statValue}>{calculateTotalPrice()}</Text>
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Odometer</Text>
-                  <Text style={styles.statValue}>{latestFuel.odometer} km</Text>
+                  <Text style={styles.statValue}>{latestFuel.odometer ?? 'N/A'} km</Text>
                 </View>
               </View>
             </View>
@@ -125,7 +138,7 @@ export default function DashboardScreen() {
           />
         )}
       </Card>
-      
+
       {/* Latest Repair */}
       <Card title="Latest Repair">
         {latestRepair ? (
@@ -144,11 +157,11 @@ export default function DashboardScreen() {
               <View style={styles.statsRow}>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Cost</Text>
-                  <Text style={styles.statValue}>${latestRepair.price.toFixed(2)}</Text>
+                  <Text style={styles.statValue}>${formatValue(latestRepair.price)}</Text>
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Odometer</Text>
-                  <Text style={styles.statValue}>{latestRepair.odometer} km</Text>
+                  <Text style={styles.statValue}>{latestRepair.odometer ?? 'N/A'} km</Text>
                 </View>
               </View>
               <Text style={styles.description} numberOfLines={2}>
@@ -165,7 +178,7 @@ export default function DashboardScreen() {
           />
         )}
       </Card>
-      
+
       {/* Active Reminders */}
       <Card title="Active Reminders">
         {activeReminders && activeReminders.length > 0 ? (
@@ -190,7 +203,7 @@ export default function DashboardScreen() {
                 </View>
               </TouchableOpacity>
             ))}
-            
+
             {activeReminders.length > 3 && (
               <TouchableOpacity
                 style={styles.viewAllButton}
@@ -211,7 +224,7 @@ export default function DashboardScreen() {
           />
         )}
       </Card>
-      
+
       {/* Quick Actions */}
       <Card title="Quick Actions">
         <View style={styles.actionsContainer}>
@@ -222,7 +235,7 @@ export default function DashboardScreen() {
             <Droplet size={24} color={Colors.primary} />
             <Text style={styles.actionText}>Add Fuel</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => router.push('/repairs/add')}
@@ -230,7 +243,7 @@ export default function DashboardScreen() {
             <Wrench size={24} color={Colors.secondary} />
             <Text style={styles.actionText}>Add Repair</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => router.push('/reminders/add')}

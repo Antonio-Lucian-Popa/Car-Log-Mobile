@@ -5,13 +5,13 @@ import { useCarStore } from '@/stores/carStore';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 
 const FUEL_TYPES = ['Gasoline', 'Diesel', 'Electric', 'Hybrid', 'LPG'];
@@ -22,7 +22,7 @@ export default function AddCarScreen() {
   
   const [name, setName] = useState('');
   const [model, setModel] = useState('');
-  const [plateNumber, setPlateNumber] = useState('');
+  const [numberPlate, setPlateNumber] = useState('');
   const [year, setYear] = useState('');
   const [fuelType, setFuelType] = useState('Gasoline');
   
@@ -53,7 +53,7 @@ export default function AddCarScreen() {
     }
     
     // Validate plate number
-    if (!plateNumber.trim()) {
+    if (!numberPlate.trim()) {
       setPlateNumberError('Plate number is required');
       isValid = false;
     }
@@ -79,7 +79,7 @@ export default function AddCarScreen() {
         await createCar({
           name,
           model,
-          plateNumber,
+          numberPlate,
           year: parseInt(year),
           fuelType,
         });
@@ -129,7 +129,7 @@ export default function AddCarScreen() {
         <Input
           label="Plate Number"
           placeholder="e.g. ABC123"
-          value={plateNumber}
+          value={numberPlate}
           onChangeText={setPlateNumber}
           autoCapitalize="characters"
           error={plateNumberError}

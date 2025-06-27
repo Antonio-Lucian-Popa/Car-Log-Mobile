@@ -24,91 +24,90 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
-      
+
       login: async (email: string, password: string) => {
         try {
           set({ isLoading: true, error: null });
           const response = await authService.login(email, password);
-          await authService.storeToken(response.token);
-          set({ 
-            user: response.user, 
-            isAuthenticated: true, 
-            isLoading: false 
-          });
+          await authService.storeTokens(response.accessToken, response.refreshToken);
+          const user = await authService.getCurrentUser();
+          set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
-          set({ 
-            isLoading: false, 
-            error: error instanceof Error ? error.message : 'Failed to login' 
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Failed to login',
           });
         }
       },
-      
+
+
       register: async (email: string, password: string) => {
         try {
           set({ isLoading: true, error: null });
           const response = await authService.register(email, password);
-          await authService.storeToken(response.token);
-          set({ 
-            user: response.user, 
-            isAuthenticated: true, 
-            isLoading: false 
+          await authService.storeTokens(response.accessToken, response.refreshToken);
+
+          set({
+            isAuthenticated: true,
+            isLoading: false,
           });
         } catch (error) {
-          set({ 
-            isLoading: false, 
-            error: error instanceof Error ? error.message : 'Failed to register' 
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Failed to register',
           });
         }
       },
-      
+
       logout: async () => {
         try {
-          await authService.removeToken();
+          await authService.removeTokens();
           set({ user: null, isAuthenticated: false });
         } catch (error) {
           console.error('Logout error:', error);
         }
       },
-      
+
       checkAuth: async () => {
         try {
           set({ isLoading: true });
           const token = await authService.getToken();
-          
           if (!token) {
             set({ isAuthenticated: false, isLoading: false });
             return;
           }
-          
+
           const user = await authService.getCurrentUser();
           set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
-          await authService.removeToken();
-          set({ 
-            user: null, 
-            isAuthenticated: false, 
-            isLoading: false 
+          await authService.removeTokens();
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
           });
         }
       },
-      
+
+
       deleteAccount: async () => {
         try {
           set({ isLoading: true });
           await authService.deleteAccount();
-          set({ 
-            user: null, 
-            isAuthenticated: false, 
-            isLoading: false 
+          await authService.removeTokens();
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
           });
         } catch (error) {
-          set({ 
-            isLoading: false, 
-            error: error instanceof Error ? error.message : 'Failed to delete account' 
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Failed to delete account',
           });
         }
       },
-      
+
       clearError: () => set({ error: null }),
     }),
     {

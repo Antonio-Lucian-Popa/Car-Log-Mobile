@@ -11,19 +11,19 @@ import { useRouter } from 'expo-router';
 import { Trash2, Wrench } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function RepairsScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const { cars, selectedCar, selectCar } = useCarStore();
   const { 
     repairs, 
@@ -31,13 +31,13 @@ export default function RepairsScreen() {
     deleteRepair, 
     isLoading 
   } = useRepairStore();
-  
+
   useEffect(() => {
     if (selectedCar) {
       fetchRepairsByCarId(selectedCar.id);
     }
   }, [selectedCar]);
-  
+
   const onRefresh = async () => {
     if (selectedCar) {
       setRefreshing(true);
@@ -45,11 +45,11 @@ export default function RepairsScreen() {
       setRefreshing(false);
     }
   };
-  
+
   const handleSelectCar = (car: Car) => {
     selectCar(car);
   };
-  
+
   const handleDeleteRepair = (id: string) => {
     Alert.alert(
       'Delete Repair',
@@ -64,7 +64,7 @@ export default function RepairsScreen() {
       ]
     );
   };
-  
+
   const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -73,11 +73,15 @@ export default function RepairsScreen() {
       day: 'numeric',
     });
   };
-  
+
+  const formatPrice = (price: number | undefined) => {
+    return typeof price === 'number' ? `$${price.toFixed(2)}` : 'N/A';
+  };
+
   if (isLoading && !refreshing) {
     return <LoadingScreen message="Loading repairs..." />;
   }
-  
+
   if (!selectedCar) {
     return (
       <EmptyState
@@ -88,7 +92,7 @@ export default function RepairsScreen() {
       />
     );
   }
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -101,13 +105,13 @@ export default function RepairsScreen() {
           style={styles.addButton}
         />
       </View>
-      
+
       <CarSelector
         cars={cars}
         selectedCar={selectedCar}
         onSelectCar={handleSelectCar}
       />
-      
+
       {repairs.length === 0 ? (
         <EmptyState
           title="No Repair Records"
@@ -122,7 +126,7 @@ export default function RepairsScreen() {
           renderItem={({ item }) => (
             <ListItem
               title={item.category}
-              subtitle={`${formatDate(item.date)} • $${item.price.toFixed(2)} • ${item.odometer} km`}
+              subtitle={`${formatDate(item.date)} • ${formatPrice(item.price)} • ${item.odometer ?? 'N/A'} km`}
               leftIcon={<Wrench size={24} color={Colors.secondary} />}
               rightContent={
                 <TouchableOpacity

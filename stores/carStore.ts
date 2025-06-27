@@ -25,6 +25,7 @@ export const useCarStore = create<CarState>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       const cars = await carService.getCars();
+      console.log('Fetched cars:', cars);
       set({ cars, isLoading: false });
       
       // If there's no selected car but we have cars, select the first one

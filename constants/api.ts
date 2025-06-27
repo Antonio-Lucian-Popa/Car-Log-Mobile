@@ -5,6 +5,7 @@ export const ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     ME: '/auth/me',
+    REFRESH: '/auth/refresh',
     DELETE: '/auth/delete',
   },
   CARS: {
