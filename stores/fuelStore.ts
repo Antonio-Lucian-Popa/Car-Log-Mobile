@@ -9,6 +9,7 @@ interface FuelState {
   error: string | null;
   fetchLatestFuel: () => Promise<void>;
   fetchFuelByCarId: (carId: string) => Promise<void>;
+  fetchLatestFuelByCarId: (carId: string) => Promise<void>;
   createFuel: (fuel: Omit<FuelEntry, 'id'>) => Promise<void>;
   deleteFuel: (id: string) => Promise<void>;
   clearError: () => void;
@@ -32,6 +33,21 @@ export const useFuelStore = create<FuelState>((set) => ({
       });
     }
   },
+
+  fetchLatestFuelByCarId: async (carId: string) => {
+  try {
+    set({ isLoading: true, error: null });
+    const entries = await fuelService.getFuelByCarId(carId);
+    const latest = entries[0] || null;
+    set({ latestFuel: latest, fuelEntries: entries, isLoading: false });
+  } catch (error) {
+    set({
+      isLoading: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch fuel data',
+    });
+  }
+},
+
   
   fetchFuelByCarId: async (carId: string) => {
     try {

@@ -9,6 +9,7 @@ interface ReminderState {
   error: string | null;
   fetchActiveReminders: () => Promise<void>;
   fetchRemindersByCarId: (carId: string) => Promise<void>;
+  fetchActiveRemindersByCarId: (carId: string) => Promise<void>;
   createReminder: (reminder: Omit<Reminder, 'id'>) => Promise<void>;
   deleteReminder: (id: string) => Promise<void>;
   clearError: () => void;
@@ -32,6 +33,20 @@ export const useReminderStore = create<ReminderState>((set) => ({
       });
     }
   },
+
+  fetchActiveRemindersByCarId: async (carId: string) => {
+  try {
+    set({ isLoading: true, error: null });
+    const reminders = await reminderService.getRemindersByCarId(carId);
+    const active = reminders.filter(r => r.isActive);
+    set({ reminders, activeReminders: active, isLoading: false });
+  } catch (error) {
+    set({
+      isLoading: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch reminders',
+    });
+  }
+},
   
   fetchRemindersByCarId: async (carId: string) => {
     try {

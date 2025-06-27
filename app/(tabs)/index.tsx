@@ -1,4 +1,5 @@
 import Card from '@/components/Card';
+import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import LoadingScreen from '@/components/LoadingScreen';
 import Colors from '@/constants/Colors';
@@ -6,6 +7,7 @@ import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useReminderStore } from '@/stores/reminderStore';
 import { useRepairStore } from '@/stores/repairStore';
+import { Car } from '@/types';
 import { useRouter } from 'expo-router';
 import {
   AlertTriangle,
@@ -13,7 +15,7 @@ import {
   Droplet,
   Wrench
 } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   RefreshControl,
   ScrollView,
@@ -27,22 +29,35 @@ export default function DashboardScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const { cars, selectedCar, isLoading: carsLoading } = useCarStore();
-  const { latestFuel, fetchLatestFuel, isLoading: fuelLoading } = useFuelStore();
-  const { latestRepair, fetchLatestRepair, isLoading: repairLoading } = useRepairStore();
-  const { activeReminders, fetchActiveReminders, isLoading: remindersLoading } = useReminderStore();
+  const { cars, selectedCar, selectCar, isLoading: carsLoading } = useCarStore();
+  const { latestFuel, fetchLatestFuelByCarId, isLoading: fuelLoading } = useFuelStore();
+  const { latestRepair, fetchLatestRepairByCarId, isLoading: repairLoading } = useRepairStore();
+  const { activeReminders, fetchActiveRemindersByCarId, isLoading: remindersLoading } = useReminderStore();
 
   const isLoading = carsLoading || fuelLoading || repairLoading || remindersLoading;
 
+  useEffect(() => {
+    if (selectedCar) {
+      fetchLatestFuelByCarId(selectedCar.id);
+      fetchLatestRepairByCarId(selectedCar.id);
+      fetchActiveRemindersByCarId(selectedCar.id);
+    }
+  }, [selectedCar]);
+
+  const handleSelectCar = (car: Car) => {
+    selectCar(car);
+  };
+
   const onRefresh = React.useCallback(async () => {
+    if (!selectedCar) return;
     setRefreshing(true);
     await Promise.all([
-      fetchLatestFuel(),
-      fetchLatestRepair(),
-      fetchActiveReminders(),
+      fetchLatestFuelByCarId(selectedCar.id),
+      fetchLatestRepairByCarId(selectedCar.id),
+      fetchActiveRemindersByCarId(selectedCar.id),
     ]);
     setRefreshing(false);
-  }, []);
+  }, [selectedCar]);
 
   if (isLoading && !refreshing) {
     return <LoadingScreen message="Loading dashboard..." />;
@@ -93,9 +108,11 @@ export default function DashboardScreen() {
     >
       <View style={styles.header}>
         <Text style={styles.title}>Dashboard</Text>
-        <Text style={styles.subtitle}>
-          {selectedCar ? `${selectedCar.name} ${selectedCar.model}` : 'All Cars'}
-        </Text>
+        <CarSelector
+          cars={cars}
+          selectedCar={selectedCar}
+          onSelectCar={handleSelectCar}
+        />
       </View>
 
       {/* Latest Fuel Entry */}

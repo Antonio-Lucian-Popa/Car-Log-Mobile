@@ -9,6 +9,7 @@ interface RepairState {
   error: string | null;
   fetchLatestRepair: () => Promise<void>;
   fetchRepairsByCarId: (carId: string) => Promise<void>;
+  fetchLatestRepairByCarId: (carId: string) => Promise<void>;
   createRepair: (repair: Omit<RepairEntry, 'id'>) => Promise<void>;
   deleteRepair: (id: string) => Promise<void>;
   clearError: () => void;
@@ -32,6 +33,21 @@ export const useRepairStore = create<RepairState>((set) => ({
       });
     }
   },
+
+  fetchLatestRepairByCarId: async (carId: string) => {
+  try {
+    set({ isLoading: true, error: null });
+    const entries = await repairService.getRepairsByCarId(carId);
+    const latest = entries[0] || null;
+    set({ latestRepair: latest, repairs: entries, isLoading: false });
+  } catch (error) {
+    set({
+      isLoading: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch repair data',
+    });
+  }
+},
+
   
   fetchRepairsByCarId: async (carId: string) => {
     try {
