@@ -93,7 +93,7 @@ export default function DashboardScreen() {
       typeof latestFuel?.price === 'number' &&
       typeof latestFuel?.liters === 'number'
     ) {
-      return `$${formatValue(latestFuel.price * latestFuel.liters)}`;
+      return `Ron ${formatValue(latestFuel.price)}`;
     }
     return 'N/A';
   };
@@ -141,7 +141,7 @@ export default function DashboardScreen() {
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Odometer</Text>
-                  <Text style={styles.statValue}>{latestFuel.odometer ?? 'N/A'} km</Text>
+                  <Text style={styles.statValue}>{latestFuel.odometer ? latestFuel.odometer.toLocaleString('ro-RO') : 'N/A'} km</Text>
                 </View>
               </View>
             </View>
@@ -174,11 +174,11 @@ export default function DashboardScreen() {
               <View style={styles.statsRow}>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Cost</Text>
-                  <Text style={styles.statValue}>${formatValue(latestRepair.price)}</Text>
+                  <Text style={styles.statValue}>Ron {formatValue(latestRepair.price)}</Text>
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Odometer</Text>
-                  <Text style={styles.statValue}>{latestRepair.odometer ?? 'N/A'} km</Text>
+                  <Text style={styles.statValue}>{latestRepair.odometer ? latestRepair.odometer.toLocaleString('ro-RO') : 'N/A'} km</Text>
                 </View>
               </View>
               <Text style={styles.description} numberOfLines={2}>
