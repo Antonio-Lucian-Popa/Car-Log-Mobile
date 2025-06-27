@@ -11,13 +11,13 @@ import { useRouter } from 'expo-router';
 import { Droplet, Trash2 } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function FuelScreen() {
@@ -122,7 +122,7 @@ export default function FuelScreen() {
           renderItem={({ item }) => (
             <ListItem
               title={item.station}
-              subtitle={`${formatDate(item.date)} • ${item.liters.toFixed(2)}L • $${(item.totalPrice || (item.price * item.liters)).toFixed(2)}`}
+              subtitle={`${formatDate(item.date)} • ${item.liters.toFixed(2)}L • Ron ${(item.price).toFixed(2)}`}
               leftIcon={<Droplet size={24} color={Colors.primary} />}
               rightContent={
                 <TouchableOpacity

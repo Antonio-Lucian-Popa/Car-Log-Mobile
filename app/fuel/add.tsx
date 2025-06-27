@@ -7,13 +7,13 @@ import { useFuelStore } from '@/stores/fuelStore';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 
 export default function AddFuelScreen() {
@@ -137,8 +137,8 @@ export default function AddFuelScreen() {
         />
         
         <Input
-          label="Price per Liter"
-          placeholder="e.g. 1.25"
+          label="Price"
+          placeholder="e.g. 300"
           value={price}
           onChangeText={setPrice}
           keyboardType="decimal-pad"
