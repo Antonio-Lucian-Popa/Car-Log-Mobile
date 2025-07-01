@@ -1,11 +1,11 @@
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useThemeStore } from '@/stores/themeStore';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function ModalScreen() {
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   return (
@@ -22,7 +22,7 @@ export default function ModalScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

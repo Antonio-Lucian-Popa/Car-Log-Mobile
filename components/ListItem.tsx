@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useThemeStore } from '@/stores/themeStore';
 import React, { ReactNode } from 'react';
 import {
@@ -33,7 +33,7 @@ const ListItem: React.FC<ListItemProps> = ({
   subtitleStyle,
 }) => {
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(colors);
 
   const Container = onPress ? TouchableOpacity : View;

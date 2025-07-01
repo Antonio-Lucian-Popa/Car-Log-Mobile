@@ -2,7 +2,7 @@ import Card from '@/components/Card';
 import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import LoadingScreen from '@/components/LoadingScreen';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useReminderStore } from '@/stores/reminderStore';
@@ -29,7 +29,7 @@ import {
 export default function DashboardScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -280,7 +280,7 @@ export default function DashboardScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

@@ -1,25 +1,32 @@
-// constants/Colors.ts
-export const Colors = {
-  light: {
-    primary: '#3B82F6',
-    secondary: '#10B981',
-    background: '#F9FAFB',
-    card: '#FFFFFF',
-    text: '#1F2937',
-    textSecondary: '#6B7280',
-    border: '#E5E7EB',
-    error: '#EF4444',
-    warning: '#F59E0B',
-  },
-  dark: {
-    primary: '#3B82F6',
-    secondary: '#10B981',
-    background: '#1F2937',
-    card: '#111827',
-    text: '#F9FAFB',
-    textSecondary: '#9CA3AF',
-    border: '#374151',
-    error: '#EF4444',
-    warning: '#FBBF24',
-  },
+const lightColors = {
+  primary: '#007AFF',
+  secondary: '#FF9500',
+  background: '#FFFFFF',
+  card: '#F3F3F3',
+  text: '#000000',
+  textSecondary: '#6e6e6e',
+  border: '#E0E0E0',
+  error: '#FF3B30',
+  // adaugă warning dacă îl folosești
+  warning: '#FFCC00',
 };
+
+const darkColors = {
+  primary: '#0A84FF',
+  secondary: '#FF9F0A',
+  background: '#000000',
+  card: '#1C1C1E',
+  text: '#FFFFFF',
+  textSecondary: '#A1A1A1',
+  border: '#3A3A3C',
+  error: '#FF453A',
+  warning: '#FFD60A',
+};
+
+const Colors = {
+  light: lightColors,
+  dark: darkColors,
+};
+
+export default Colors;
+export type ThemeType = keyof typeof Colors;

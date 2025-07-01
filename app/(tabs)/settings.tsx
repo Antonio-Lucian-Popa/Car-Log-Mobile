@@ -1,6 +1,6 @@
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import {
@@ -27,7 +27,7 @@ export default function SettingsScreen() {
   const { theme, toggleTheme } = useThemeStore();
 
   const styles = createStyles(theme);
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -145,7 +145,7 @@ export default function SettingsScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

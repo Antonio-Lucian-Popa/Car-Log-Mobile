@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import CarSelector from '@/components/CarSelector';
 import Input from '@/components/Input';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -20,7 +20,7 @@ import {
 export default function AddFuelScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const { cars, selectedCar, selectCar } = useCarStore();
@@ -180,7 +180,7 @@ export default function AddFuelScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

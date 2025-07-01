@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useReminderStore } from '@/stores/reminderStore';
@@ -21,7 +21,7 @@ export default function TabLayout() {
   const { fetchLatestRepair } = useRepairStore();
   const { fetchActiveReminders } = useReminderStore();
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   useEffect(() => {
     fetchCars();

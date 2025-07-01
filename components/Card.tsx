@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useThemeStore } from '@/stores/themeStore';
 import React, { ReactNode } from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
@@ -19,7 +19,7 @@ const Card: React.FC<CardProps> = ({
   contentStyle,
 }) => {
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(colors);
 
   return (

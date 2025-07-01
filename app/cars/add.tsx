@@ -1,6 +1,6 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Stack, useRouter } from 'expo-router';
@@ -20,7 +20,7 @@ const FUEL_TYPES = ['Gasoline', 'Diesel', 'Electric', 'Hybrid', 'LPG'];
 export default function AddCarScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const { createCar, isLoading, error } = useCarStore();
@@ -178,7 +178,7 @@ export default function AddCarScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

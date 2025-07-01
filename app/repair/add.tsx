@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import CarSelector from '@/components/CarSelector';
 import Input from '@/components/Input';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useRepairStore } from '@/stores/repairStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -30,7 +30,7 @@ const REPAIR_CATEGORIES = [
 export default function AddRepairScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const { cars, selectedCar, selectCar } = useCarStore();
@@ -195,7 +195,7 @@ export default function AddRepairScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

@@ -2,7 +2,7 @@ import Button from '@/components/Button';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { Car } from '@/types';
@@ -23,7 +23,7 @@ export default function CarsScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const {
@@ -125,7 +125,7 @@ export default function CarsScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   return StyleSheet.create({
     container: {

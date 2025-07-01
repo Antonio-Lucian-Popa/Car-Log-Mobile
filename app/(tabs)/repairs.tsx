@@ -3,7 +3,7 @@ import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useRepairStore } from '@/stores/repairStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -26,7 +26,7 @@ export default function RepairsScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const { theme } = useThemeStore();
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   const styles = createStyles(theme);
 
   const { cars, selectedCar, selectCar } = useCarStore();
@@ -155,7 +155,7 @@ export default function RepairsScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   
   return StyleSheet.create({
     container: {

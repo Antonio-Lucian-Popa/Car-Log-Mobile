@@ -3,7 +3,7 @@ import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
-import { Colors } from '@/constants/Colors';
+import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useReminderStore } from '@/stores/reminderStore';
 import { useThemeStore } from '@/stores/themeStore';
@@ -25,7 +25,7 @@ export default function RemindersScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
   const styles = createStyles(theme);
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
 
   const [refreshing, setRefreshing] = useState(false);
   const { cars, selectedCar, selectCar } = useCarStore();
@@ -173,7 +173,7 @@ export default function RemindersScreen() {
 }
 
 function createStyles(theme: 'light' | 'dark') {
-  const colors = Colors[theme];
+  const colors = Colors[theme] ?? Colors.light;
   return StyleSheet.create({
     container: {
       flex: 1,
