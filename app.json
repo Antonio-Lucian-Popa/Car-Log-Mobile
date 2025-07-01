@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Car Log",
-    "slug": "Car Log",
+    "slug": "car-log",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.jpeg",
@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "extra": {
-      "API_URL": "https://carnet-auto-be.onrender.com"
+      "API_URL": "https://carnet-auto-be.onrender.com",
+      "router": {},
+      "eas": {
+        "projectId": "16d9965b-c1ca-44c8-be94-d528119761e3"
+      }
     },
     "ios": {
       "supportsTablet": true
@@ -19,7 +23,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anto_dev_web.carlog"
     },
     "web": {
       "bundler": "metro",
