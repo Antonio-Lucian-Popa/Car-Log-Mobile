@@ -26,6 +26,10 @@ import {
   View
 } from 'react-native';
 
+import { useNotifications } from '@/hooks/useNotifications';
+import { useAuthStore } from '@/stores/authStore';
+
+
 export default function DashboardScreen() {
   const router = useRouter();
   const { theme } = useThemeStore();
@@ -38,6 +42,9 @@ export default function DashboardScreen() {
   const { latestFuel, fetchLatestFuelByCarId, isLoading: fuelLoading } = useFuelStore();
   const { latestRepair, fetchLatestRepairByCarId, isLoading: repairLoading } = useRepairStore();
   const { activeReminders, fetchActiveRemindersByCarId, isLoading: remindersLoading } = useReminderStore();
+
+  const { user } = useAuthStore();
+  useNotifications(user?.id);
 
   const isLoading = carsLoading || fuelLoading || repairLoading || remindersLoading;
 
@@ -123,7 +130,7 @@ export default function DashboardScreen() {
       {/* Latest Fuel Entry */}
       <Card title="Latest Fuel Entry">
         {latestFuel ? (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.cardContent}
             onPress={() => router.push('/fuel')}
           >
@@ -164,7 +171,7 @@ export default function DashboardScreen() {
       {/* Latest Repair */}
       <Card title="Latest Repair">
         {latestRepair ? (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.cardContent}
             onPress={() => router.push('/repairs')}
           >
