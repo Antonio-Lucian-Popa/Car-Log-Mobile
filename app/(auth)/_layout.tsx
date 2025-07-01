@@ -24,12 +24,14 @@ export default function AuthLayout() {
           name="login"
           options={{
             title: "Login",
+            headerShown: false
           }}
         />
         <Stack.Screen
           name="register"
           options={{
             title: "Register",
+            headerShown: false
           }}
         />
       </Stack>

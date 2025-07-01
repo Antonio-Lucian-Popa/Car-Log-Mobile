@@ -3,21 +3,21 @@ import Card from '@/components/Card';
 import Colors from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
 import {
-    Bell,
-    HelpCircle,
-    Moon,
-    Shield,
-    User
+  Bell,
+  HelpCircle,
+  Moon,
+  Shield,
+  User
 } from 'lucide-react-native';
 import React from 'react';
 import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function SettingsScreen() {
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+    paddingVertical: 48,
   },
   content: {
     padding: 16,

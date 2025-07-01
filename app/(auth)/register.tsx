@@ -5,14 +5,15 @@ import { useAuthStore } from '@/stores/authStore';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function RegisterScreen() {
@@ -22,18 +23,18 @@ export default function RegisterScreen() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  
+
   const { register, isLoading, error, clearError } = useAuthStore();
-  
+
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setEmailError('');
     setPasswordError('');
     setConfirmPasswordError('');
     clearError();
-    
+
     // Validate email
     if (!email.trim()) {
       setEmailError('Email is required');
@@ -42,7 +43,7 @@ export default function RegisterScreen() {
       setEmailError('Email is invalid');
       isValid = false;
     }
-    
+
     // Validate password
     if (!password) {
       setPasswordError('Password is required');
@@ -51,7 +52,7 @@ export default function RegisterScreen() {
       setPasswordError('Password must be at least 6 characters');
       isValid = false;
     }
-    
+
     // Validate confirm password
     if (!confirmPassword) {
       setConfirmPasswordError('Please confirm your password');
@@ -60,10 +61,10 @@ export default function RegisterScreen() {
       setConfirmPasswordError('Passwords do not match');
       isValid = false;
     }
-    
+
     return isValid;
   };
-  
+
   const handleRegister = async () => {
     if (validateForm()) {
       try {
@@ -73,26 +74,29 @@ export default function RegisterScreen() {
       }
     }
   };
-  
+
   const handleGoogleRegister = () => {
     Alert.alert('Google Registration', 'Google registration is not implemented in this demo.');
   };
-  
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.title}>Create Account</Text>
+          <Image
+            source={require('@/assets/images/icon.jpeg')} // Sau calea relativă
+            style={styles.logo}
+          />
           <Text style={styles.subtitle}>Join Car Logbook to track your vehicle expenses</Text>
         </View>
-        
+
         <View style={styles.form}>
           <Input
             label="Email"
@@ -103,7 +107,7 @@ export default function RegisterScreen() {
             autoCapitalize="none"
             error={emailError}
           />
-          
+
           <Input
             label="Password"
             placeholder="Create a password"
@@ -112,7 +116,7 @@ export default function RegisterScreen() {
             secureTextEntry
             error={passwordError}
           />
-          
+
           <Input
             label="Confirm Password"
             placeholder="Confirm your password"
@@ -121,29 +125,29 @@ export default function RegisterScreen() {
             secureTextEntry
             error={confirmPasswordError}
           />
-          
+
           {error && <Text style={styles.errorText}>{error}</Text>}
-          
+
           <Button
             title="Register"
             onPress={handleRegister}
             isLoading={isLoading}
             style={styles.registerButton}
           />
-          
+
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>OR</Text>
             <View style={styles.dividerLine} />
           </View>
-          
+
           <Button
             title="Register with Google"
             onPress={handleGoogleRegister}
             variant="outline"
             style={styles.googleButton}
           />
-          
+
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account?</Text>
             <Link href="/(auth)/login" asChild>
@@ -159,6 +163,12 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 80,
+    height: 80,
+    borderRadius: 40, // 50% din dimensiune pentru formă rotundă
+    marginBottom: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -166,10 +176,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: 20,
+    paddingTop: 60,
   },
   header: {
     alignItems: 'center',
-    marginVertical: 30,
+    marginVertical: 38,
   },
   title: {
     fontSize: 28,

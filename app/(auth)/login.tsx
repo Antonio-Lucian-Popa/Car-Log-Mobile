@@ -1,18 +1,20 @@
 import Button from '@/components/Button';
+import GoogleButton from '@/components/GoogleButton';
 import Input from '@/components/Input';
 import Colors from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function LoginScreen() {
@@ -20,17 +22,17 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  
+
   const { login, isLoading, error, clearError } = useAuthStore();
-  
+
   const validateForm = () => {
     let isValid = true;
-    
+
     // Reset errors
     setEmailError('');
     setPasswordError('');
     clearError();
-    
+
     // Validate email
     if (!email.trim()) {
       setEmailError('Email is required');
@@ -39,7 +41,7 @@ export default function LoginScreen() {
       setEmailError('Email is invalid');
       isValid = false;
     }
-    
+
     // Validate password
     if (!password) {
       setPasswordError('Password is required');
@@ -48,10 +50,10 @@ export default function LoginScreen() {
       setPasswordError('Password must be at least 6 characters');
       isValid = false;
     }
-    
+
     return isValid;
   };
-  
+
   const handleLogin = async () => {
     if (validateForm()) {
       try {
@@ -61,26 +63,29 @@ export default function LoginScreen() {
       }
     }
   };
-  
+
   const handleGoogleLogin = () => {
     Alert.alert('Google Login', 'Google login is not implemented in this demo.');
   };
-  
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.title}>Car Logbook</Text>
+          <Image
+            source={require('@/assets/images/icon.jpeg')} // Sau calea relativă
+            style={styles.logo}
+          />
           <Text style={styles.subtitle}>Track your vehicle expenses</Text>
         </View>
-        
+
         <View style={styles.form}>
           <Input
             label="Email"
@@ -91,7 +96,7 @@ export default function LoginScreen() {
             autoCapitalize="none"
             error={emailError}
           />
-          
+
           <Input
             label="Password"
             placeholder="Enter your password"
@@ -100,29 +105,26 @@ export default function LoginScreen() {
             secureTextEntry
             error={passwordError}
           />
-          
+
           {error && <Text style={styles.errorText}>{error}</Text>}
-          
+
           <Button
             title="Login"
             onPress={handleLogin}
             isLoading={isLoading}
             style={styles.loginButton}
           />
-          
+
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>OR</Text>
             <View style={styles.dividerLine} />
           </View>
-          
-          <Button
-            title="Continue with Google"
+
+          <GoogleButton
             onPress={handleGoogleLogin}
-            variant="outline"
-            style={styles.googleButton}
           />
-          
+
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Don&apos;t have an account?</Text>
             <Link href="/(auth)/register" asChild>
@@ -138,6 +140,12 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 80,
+    height: 80,
+    borderRadius: 40, // 50% din dimensiune pentru formă rotundă
+    marginBottom: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -145,10 +153,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: 20,
+    paddingTop: 60,
   },
   header: {
     alignItems: 'center',
-    marginVertical: 40,
+    marginVertical: 48,
   },
   title: {
     fontSize: 28,

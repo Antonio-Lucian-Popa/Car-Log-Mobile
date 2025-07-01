@@ -54,6 +54,7 @@ export default function TabLayout() {
         options={{
           title: 'Dashboard',
           tabBarLabel: 'Dashboard',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Home size={size} color={color} />
           ),
@@ -65,6 +66,7 @@ export default function TabLayout() {
         options={{
           title: 'My Cars',
           tabBarLabel: 'Cars',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Car size={size} color={color} />
           ),
@@ -76,6 +78,7 @@ export default function TabLayout() {
         options={{
           title: 'Fuel Logs',
           tabBarLabel: 'Fuel',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Droplet size={size} color={color} />
           ),
@@ -87,6 +90,7 @@ export default function TabLayout() {
         options={{
           title: 'Repairs',
           tabBarLabel: 'Repairs',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Wrench size={size} color={color} />
           ),
@@ -98,6 +102,7 @@ export default function TabLayout() {
         options={{
           title: 'Reminders',
           tabBarLabel: 'Reminders',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Bell size={size} color={color} />
           ),
@@ -109,6 +114,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarLabel: 'Settings',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Settings size={size} color={color} />
           ),

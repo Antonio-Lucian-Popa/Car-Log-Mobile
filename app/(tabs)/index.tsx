@@ -285,11 +285,13 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 16,
+    marginVertical: 48,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.text,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
