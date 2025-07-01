@@ -201,6 +201,7 @@ function createStyles(theme: 'light' | 'dark') {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      paddingVertical: 48,
     },
     scrollView: {
       flex: 1,

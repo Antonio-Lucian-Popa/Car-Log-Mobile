@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "car-log-mobile",
-    "slug": "car-log-mobile",
+    "name": "Car Log",
+    "slug": "Car Log",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.jpeg",
     "scheme": "carlogmobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

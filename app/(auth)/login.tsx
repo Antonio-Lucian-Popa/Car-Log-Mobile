@@ -3,6 +3,7 @@ import GoogleButton from '@/components/GoogleButton';
 import Input from '@/components/Input';
 import Colors from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -24,16 +25,17 @@ export default function LoginScreen() {
   const [passwordError, setPasswordError] = useState('');
 
   const { login, isLoading, error, clearError } = useAuthStore();
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(colors);
 
   const validateForm = () => {
     let isValid = true;
 
-    // Reset errors
     setEmailError('');
     setPasswordError('');
     clearError();
 
-    // Validate email
     if (!email.trim()) {
       setEmailError('Email is required');
       isValid = false;
@@ -42,7 +44,6 @@ export default function LoginScreen() {
       isValid = false;
     }
 
-    // Validate password
     if (!password) {
       setPasswordError('Password is required');
       isValid = false;
@@ -80,7 +81,7 @@ export default function LoginScreen() {
       >
         <View style={styles.header}>
           <Image
-            source={require('@/assets/images/icon.jpeg')} // Sau calea relativă
+            source={require('@/assets/images/icon.jpeg')}
             style={styles.logo}
           />
           <Text style={styles.subtitle}>Track your vehicle expenses</Text>
@@ -121,9 +122,7 @@ export default function LoginScreen() {
             <View style={styles.dividerLine} />
           </View>
 
-          <GoogleButton
-            onPress={handleGoogleLogin}
-          />
+          <GoogleButton onPress={handleGoogleLogin} />
 
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Don&apos;t have an account?</Text>
@@ -139,75 +138,70 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 40, // 50% din dimensiune pentru formă rotundă
-    marginBottom: 16,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    paddingTop: 60,
-  },
-  header: {
-    alignItems: 'center',
-    marginVertical: 48,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.textSecondary,
-  },
-  form: {
-    width: '100%',
-  },
-  loginButton: {
-    marginTop: 16,
-  },
-  errorText: {
-    color: Colors.error,
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 24,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: Colors.border,
-  },
-  dividerText: {
-    marginHorizontal: 10,
-    color: Colors.textSecondary,
-  },
-  googleButton: {
-    marginBottom: 16,
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  registerText: {
-    color: Colors.textSecondary,
-    marginRight: 4,
-  },
-  registerLink: {
-    color: Colors.primary,
-    fontWeight: '600',
-  },
-});
+const createStyles = (colors: typeof Colors.light | typeof Colors.dark) =>
+  StyleSheet.create({
+    logo: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      marginBottom: 16,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      padding: 20,
+      paddingTop: 60,
+    },
+    header: {
+      alignItems: 'center',
+      marginVertical: 48,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+    },
+    form: {
+      width: '100%',
+    },
+    loginButton: {
+      marginTop: 16,
+    },
+    errorText: {
+      color: colors.error,
+      marginTop: 8,
+      textAlign: 'center',
+    },
+    divider: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 24,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      marginHorizontal: 10,
+      color: colors.textSecondary,
+    },
+    googleButton: {
+      marginBottom: 16,
+    },
+    registerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 16,
+    },
+    registerText: {
+      color: colors.textSecondary,
+      marginRight: 4,
+    },
+    registerLink: {
+      color: colors.primary,
+      fontWeight: '600',
+    },
+  });

@@ -104,7 +104,7 @@ export default function RepairsScreen() {
         <Text style={styles.title}>Repairs</Text>
         <Button
           title="Add Repair"
-          onPress={() => router.push('/repairs/add')}
+          onPress={() => router.push('/repair/add')}
           variant="primary"
           size="small"
           style={styles.addButton}
@@ -122,7 +122,7 @@ export default function RepairsScreen() {
           title="No Repair Records"
           message={`Add your first repair record for ${selectedCar.name} ${selectedCar.model}`}
           buttonTitle="Add Repair"
-          onButtonPress={() => router.push('/repairs/add')}
+          onButtonPress={() => router.push('/repair/add')}
         />
       ) : (
         <FlatList

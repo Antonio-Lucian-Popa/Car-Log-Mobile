@@ -195,7 +195,7 @@ export default function DashboardScreen() {
           <EmptyState
             title="No Repair Records"
             buttonTitle="Add Repair"
-            onButtonPress={() => router.push('/repairs/add')}
+            onButtonPress={() => router.push('/repair/add')}
             style={styles.emptyStateSmall}
           />
         )}
@@ -260,7 +260,7 @@ export default function DashboardScreen() {
 
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => router.push('/repairs/add')}
+            onPress={() => router.push('/repair/add')}
           >
             <Wrench size={24} color={colors.secondary} />
             <Text style={styles.actionText}>Add Repair</Text>
