@@ -7,8 +7,9 @@ const lightColors = {
   textSecondary: '#6e6e6e',
   border: '#E0E0E0',
   error: '#FF3B30',
-  // adaugă warning dacă îl folosești
   warning: '#FFCC00',
+  disabled: '#C7C7CC',
+  tint: '#0A7EA4',
 };
 
 const darkColors = {
@@ -21,6 +22,8 @@ const darkColors = {
   border: '#3A3A3C',
   error: '#FF453A',
   warning: '#FFD60A',
+  disabled: '#3A3A3C',
+  tint: '#4DD0E1',
 };
 
 const Colors = {

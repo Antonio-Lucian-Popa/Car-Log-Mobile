@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import { useThemeStore } from '@/stores/themeStore';
 import React from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Button from './Button';
@@ -18,6 +19,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onButtonPress,
   style,
 }) => {
+  const { theme } = useThemeStore();
+  const colors = Colors[theme] ?? Colors.light;
+  const styles = createStyles(colors);
+
   return (
     <View style={[styles.container, style]}>
       <Text style={styles.title}>{title}</Text>
@@ -34,29 +39,31 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: Colors.text,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 16,
-  },
-});
+function createStyles(colors: typeof Colors.light) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    message: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    button: {
+      marginTop: 16,
+    },
+  });
+}
 
 export default EmptyState;

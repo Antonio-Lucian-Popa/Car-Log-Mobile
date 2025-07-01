@@ -1,15 +1,16 @@
 import Colors from '@/constants/Colors';
+import { useThemeStore } from '@/stores/themeStore';
 import { Eye, EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TextInputProps,
-    TextStyle,
-    TouchableOpacity,
-    View,
-    ViewStyle
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle
 } from 'react-native';
 
 interface InputProps extends TextInputProps {
@@ -33,42 +34,47 @@ const Input: React.FC<InputProps> = ({
   ...rest
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  
+
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
-      
+      {label && <Text style={[styles.label, { color: colors.text }, labelStyle]}>{label}</Text>}
+
       <View style={[
         styles.inputContainer,
-        error ? styles.inputError : null,
+        {
+          backgroundColor: colors.card,
+          borderColor: error ? colors.error : colors.border,
+        },
         inputStyle
       ]}>
         <TextInput
-          style={styles.input}
-          placeholderTextColor={Colors.placeholder}
+          style={[styles.input, { color: colors.text }]}
+          placeholderTextColor={colors.textSecondary}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           {...rest}
         />
-        
+
         {secureTextEntry && (
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={togglePasswordVisibility}
             style={styles.eyeIcon}
           >
             {isPasswordVisible ? (
-              <EyeOff size={20} color={Colors.textSecondary} />
+              <EyeOff size={20} color={colors.textSecondary} />
             ) : (
-              <Eye size={20} color={Colors.textSecondary} />
+              <Eye size={20} color={colors.textSecondary} />
             )}
           </TouchableOpacity>
         )}
       </View>
-      
-      {error && <Text style={[styles.errorText, errorStyle]}>{error}</Text>}
+
+      {error && <Text style={[styles.errorText, { color: colors.error }, errorStyle]}>{error}</Text>}
     </View>
   );
 };
@@ -81,29 +87,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 6,
-    color: Colors.text,
     fontWeight: '500',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
     borderRadius: 8,
-    backgroundColor: '#fff',
   },
   input: {
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    color: Colors.text,
-  },
-  inputError: {
-    borderColor: Colors.error,
   },
   errorText: {
-    color: Colors.error,
     fontSize: 12,
     marginTop: 4,
   },

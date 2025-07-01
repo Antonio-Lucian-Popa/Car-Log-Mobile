@@ -1,6 +1,7 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
+import Colors from '@/constants/Colors';
+import { useThemeStore } from '@/stores/themeStore';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -15,7 +16,10 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+   const { theme } = useThemeStore();
+   const color = theme === 'light'
+      ? lightColor || getTextColor(type, 'light')
+      : darkColor || getTextColor(type, 'dark');
 
   return (
     <Text
@@ -25,12 +29,21 @@ export function ThemedText({
         type === 'title' ? styles.title : undefined,
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
         type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
+        type === 'link' && styles.link,
         style,
       ]}
       {...rest}
     />
   );
+}
+
+function getTextColor(type: string, theme: 'light' | 'dark') {
+  const colorMap = {
+    text: Colors[theme].text,
+    link: Colors[theme].tint ?? Colors[theme].primary,
+  };
+
+  return type === 'link' ? colorMap.link : colorMap.text;
 }
 
 const styles = StyleSheet.create({
@@ -55,6 +68,5 @@ const styles = StyleSheet.create({
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
   },
 });

@@ -1,13 +1,14 @@
 import Colors from '@/constants/Colors';
+import { useThemeStore } from '@/stores/themeStore';
 import React from 'react';
 import {
-    ActivityIndicator,
-    StyleSheet,
-    Text,
-    TextStyle,
-    TouchableOpacity,
-    TouchableOpacityProps,
-    ViewStyle
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle
 } from 'react-native';
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -32,10 +33,13 @@ const Button: React.FC<ButtonProps> = ({
   textStyle,
   ...rest
 }) => {
+  const { theme } = useThemeStore();
+  const colors = Colors[theme] ?? Colors.light;
+  const styles = createStyles(colors);
+
   const getButtonStyle = () => {
     let buttonStyle: ViewStyle = {};
-    
-    // Variant styles
+
     switch (variant) {
       case 'primary':
         buttonStyle = styles.primaryButton;
@@ -50,8 +54,7 @@ const Button: React.FC<ButtonProps> = ({
         buttonStyle = styles.dangerButton;
         break;
     }
-    
-    // Size styles
+
     switch (size) {
       case 'small':
         buttonStyle = { ...buttonStyle, ...styles.smallButton };
@@ -63,19 +66,17 @@ const Button: React.FC<ButtonProps> = ({
         buttonStyle = { ...buttonStyle, ...styles.largeButton };
         break;
     }
-    
-    // Disabled style
+
     if (disabled || isLoading) {
       buttonStyle = { ...buttonStyle, ...styles.disabledButton };
     }
-    
+
     return buttonStyle;
   };
-  
+
   const getTextStyle = () => {
     let textStyleVar: TextStyle = {};
-    
-    // Variant text styles
+
     switch (variant) {
       case 'primary':
         textStyleVar = styles.primaryText;
@@ -90,8 +91,7 @@ const Button: React.FC<ButtonProps> = ({
         textStyleVar = styles.dangerText;
         break;
     }
-    
-    // Size text styles
+
     switch (size) {
       case 'small':
         textStyleVar = { ...textStyleVar, ...styles.smallText };
@@ -103,15 +103,14 @@ const Button: React.FC<ButtonProps> = ({
         textStyleVar = { ...textStyleVar, ...styles.largeText };
         break;
     }
-    
-    // Disabled text style
+
     if (disabled || isLoading) {
       textStyleVar = { ...textStyleVar, ...styles.disabledText };
     }
-    
+
     return textStyleVar;
   };
-  
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -121,10 +120,7 @@ const Button: React.FC<ButtonProps> = ({
       {...rest}
     >
       {isLoading ? (
-        <ActivityIndicator 
-          color={variant === 'outline' ? Colors.primary : '#fff'} 
-          size="small" 
-        />
+        <ActivityIndicator color={variant === 'outline' ? colors.primary : '#fff'} size="small" />
       ) : (
         <Text style={[styles.text, getTextStyle(), textStyle]}>{title}</Text>
       )}
@@ -132,77 +128,78 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  text: {
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  
-  // Variant styles
-  primaryButton: {
-    backgroundColor: Colors.primary,
-  },
-  primaryText: {
-    color: '#fff',
-  },
-  secondaryButton: {
-    backgroundColor: Colors.secondary,
-  },
-  secondaryText: {
-    color: '#fff',
-  },
-  outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: Colors.primary,
-  },
-  outlineText: {
-    color: Colors.primary,
-  },
-  dangerButton: {
-    backgroundColor: Colors.error,
-  },
-  dangerText: {
-    color: '#fff',
-  },
-  
-  // Size styles
-  smallButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-  },
-  smallText: {
-    fontSize: 12,
-  },
-  mediumButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-  },
-  mediumText: {
-    fontSize: 14,
-  },
-  largeButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-  },
-  largeText: {
-    fontSize: 16,
-  },
-  
-  // Disabled styles
-  disabledButton: {
-    backgroundColor: Colors.disabled,
-    borderColor: Colors.disabled,
-  },
-  disabledText: {
-    color: '#fff',
-  },
-});
+const createStyles = (colors: typeof Colors.light) =>
+  StyleSheet.create({
+    button: {
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    text: {
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+
+    // Variant styles
+    primaryButton: {
+      backgroundColor: colors.primary,
+    },
+    primaryText: {
+      color: '#fff',
+    },
+    secondaryButton: {
+      backgroundColor: colors.secondary,
+    },
+    secondaryText: {
+      color: '#fff',
+    },
+    outlineButton: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    outlineText: {
+      color: colors.primary,
+    },
+    dangerButton: {
+      backgroundColor: colors.error,
+    },
+    dangerText: {
+      color: '#fff',
+    },
+
+    // Sizes
+    smallButton: {
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+    },
+    smallText: {
+      fontSize: 12,
+    },
+    mediumButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+    },
+    mediumText: {
+      fontSize: 14,
+    },
+    largeButton: {
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+    },
+    largeText: {
+      fontSize: 16,
+    },
+
+    // Disabled
+    disabledButton: {
+      backgroundColor: colors.disabled,
+      borderColor: colors.disabled,
+    },
+    disabledText: {
+      color: '#fff',
+    },
+  });
 
 export default Button;
