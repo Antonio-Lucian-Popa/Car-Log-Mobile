@@ -1,4 +1,3 @@
-import Button from '@/components/Button';
 import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
@@ -103,13 +102,6 @@ export default function RemindersScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Reminders</Text>
-        <Button
-          title="Add Reminder"
-          onPress={() => router.push('/reminders/add')}
-          variant="primary"
-          size="small"
-          style={styles.addButton}
-        />
       </View>
 
       <CarSelector
@@ -134,11 +126,10 @@ export default function RemindersScreen() {
             return (
               <ListItem
                 title={item.type}
-                subtitle={`Due: ${formatDate(item.dueDate)} • ${
-                  item.repeatDays > 0
+                subtitle={`Due: ${formatDate(item.dueDate)} • ${item.repeatDays > 0
                     ? `Repeats every ${item.repeatDays} days`
                     : 'One-time'
-                }`}
+                  }`}
                 leftIcon={
                   active ? (
                     <AlertTriangle size={24} color={colors.warning} />
@@ -168,6 +159,13 @@ export default function RemindersScreen() {
           }
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/reminders/add')}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.fabText}>＋</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -207,6 +205,27 @@ function createStyles(theme: 'light' | 'dark') {
     },
     deleteButton: {
       padding: 8,
+    },
+    fab: {
+      position: 'absolute',
+      bottom: 32,
+      right: 24,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.5,
+    },
+    fabText: {
+      fontSize: 28,
+      color: '#fff',
+      lineHeight: 32,
     },
   });
 }

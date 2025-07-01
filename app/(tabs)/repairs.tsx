@@ -1,4 +1,3 @@
-import Button from '@/components/Button';
 import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
@@ -30,11 +29,11 @@ export default function RepairsScreen() {
   const styles = createStyles(theme);
 
   const { cars, selectedCar, selectCar } = useCarStore();
-  const { 
-    repairs, 
-    fetchRepairsByCarId, 
-    deleteRepair, 
-    isLoading 
+  const {
+    repairs,
+    fetchRepairsByCarId,
+    deleteRepair,
+    isLoading
   } = useRepairStore();
 
   useEffect(() => {
@@ -61,8 +60,8 @@ export default function RepairsScreen() {
       'Are you sure you want to delete this repair record?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
+        {
+          text: 'Delete',
           style: 'destructive',
           onPress: () => deleteRepair(id)
         }
@@ -102,13 +101,7 @@ export default function RepairsScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Repairs</Text>
-        <Button
-          title="Add Repair"
-          onPress={() => router.push('/repair/add')}
-          variant="primary"
-          size="small"
-          style={styles.addButton}
-        />
+
       </View>
 
       <CarSelector
@@ -150,13 +143,20 @@ export default function RepairsScreen() {
           }
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/repair/add')}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.fabText}>＋</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 function createStyles(theme: 'light' | 'dark') {
   const colors = Colors[theme] ?? Colors.light;
-  
+
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -188,5 +188,27 @@ function createStyles(theme: 'light' | 'dark') {
     deleteButton: {
       padding: 8,
     },
+    fab: {
+      position: 'absolute',
+      bottom: 32,
+      right: 24,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.5,
+    },
+    fabText: {
+      fontSize: 28,
+      color: '#fff',
+      lineHeight: 32,
+    },
+
   });
 }

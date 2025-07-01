@@ -1,4 +1,3 @@
-import Button from '@/components/Button';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
@@ -68,13 +67,6 @@ export default function CarsScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>My Cars</Text>
-        <Button
-          title="Add Car"
-          onPress={() => router.push('/cars/add')}
-          variant="primary"
-          size="small"
-          style={styles.addButton}
-        />
       </View>
 
       {cars.length === 0 ? (
@@ -120,6 +112,13 @@ export default function CarsScreen() {
           }
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/cars/add')}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.fabText}>＋</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -165,6 +164,27 @@ function createStyles(theme: 'light' | 'dark') {
     },
     deleteButton: {
       padding: 8,
+    },
+    fab: {
+      position: 'absolute',
+      bottom: 32,
+      right: 24,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 4, // Android shadow
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.5,
+    },
+    fabText: {
+      fontSize: 28,
+      color: '#fff',
+      lineHeight: 32,
     },
   });
 }
