@@ -3,9 +3,10 @@ import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useRepairStore } from '@/stores/repairStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Car } from '@/types';
 import { useRouter } from 'expo-router';
 import { Trash2, Wrench } from 'lucide-react-native';
@@ -23,6 +24,10 @@ import {
 export default function RepairsScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(theme);
 
   const { cars, selectedCar, selectCar } = useCarStore();
   const { 
@@ -75,7 +80,7 @@ export default function RepairsScreen() {
   };
 
   const formatPrice = (price: number | undefined) => {
-    return typeof price === 'number' ? `$${price.toFixed(2)}` : 'N/A';
+    return typeof price === 'number' ? `Ron ${price.toFixed(2)}` : 'N/A';
   };
 
   if (isLoading && !refreshing) {
@@ -127,13 +132,13 @@ export default function RepairsScreen() {
             <ListItem
               title={item.category}
               subtitle={`${formatDate(item.date)} • ${formatPrice(item.price)} • ${item.odometer ?? 'N/A'} km`}
-              leftIcon={<Wrench size={24} color={Colors.secondary} />}
+              leftIcon={<Wrench size={24} color={colors.secondary} />}
               rightContent={
                 <TouchableOpacity
                   onPress={() => handleDeleteRepair(item.id)}
                   style={styles.deleteButton}
                 >
-                  <Trash2 size={20} color={Colors.error} />
+                  <Trash2 size={20} color={colors.error} />
                 </TouchableOpacity>
               }
               style={styles.repairItem}
@@ -149,35 +154,39 @@ export default function RepairsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    marginVertical: 48,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text,
-  },
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  repairItem: {
-    marginBottom: 8,
-  },
-  deleteButton: {
-    padding: 8,
-  },
-});
+function createStyles(theme: 'light' | 'dark') {
+  const colors = Colors[theme];
+  
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 16,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+      marginVertical: 48,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    addButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    listContent: {
+      paddingBottom: 20,
+    },
+    repairItem: {
+      marginBottom: 8,
+    },
+    deleteButton: {
+      padding: 8,
+    },
+  });
+}

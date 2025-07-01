@@ -3,9 +3,10 @@ import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import ListItem from '@/components/ListItem';
 import LoadingScreen from '@/components/LoadingScreen';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Car } from '@/types';
 import { useRouter } from 'expo-router';
 import { Droplet, Trash2 } from 'lucide-react-native';
@@ -23,21 +24,24 @@ import {
 export default function FuelScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
-  
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(theme);
+
   const { cars, selectedCar, selectCar } = useCarStore();
-  const { 
-    fuelEntries, 
-    fetchFuelByCarId, 
-    deleteFuel, 
-    isLoading 
+  const {
+    fuelEntries,
+    fetchFuelByCarId,
+    deleteFuel,
+    isLoading
   } = useFuelStore();
-  
+
   useEffect(() => {
     if (selectedCar) {
       fetchFuelByCarId(selectedCar.id);
     }
   }, [selectedCar]);
-  
+
   const onRefresh = async () => {
     if (selectedCar) {
       setRefreshing(true);
@@ -45,26 +49,26 @@ export default function FuelScreen() {
       setRefreshing(false);
     }
   };
-  
+
   const handleSelectCar = (car: Car) => {
     selectCar(car);
   };
-  
+
   const handleDeleteFuel = (id: string) => {
     Alert.alert(
       'Delete Fuel Entry',
       'Are you sure you want to delete this fuel entry?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
+        {
+          text: 'Delete',
           style: 'destructive',
-          onPress: () => deleteFuel(id)
-        }
+          onPress: () => deleteFuel(id),
+        },
       ]
     );
   };
-  
+
   const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -73,11 +77,11 @@ export default function FuelScreen() {
       day: 'numeric',
     });
   };
-  
+
   if (isLoading && !refreshing) {
     return <LoadingScreen message="Loading fuel entries..." />;
   }
-  
+
   if (!selectedCar) {
     return (
       <EmptyState
@@ -88,7 +92,7 @@ export default function FuelScreen() {
       />
     );
   }
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -101,13 +105,13 @@ export default function FuelScreen() {
           style={styles.addButton}
         />
       </View>
-      
+
       <CarSelector
         cars={cars}
         selectedCar={selectedCar}
         onSelectCar={handleSelectCar}
       />
-      
+
       {fuelEntries.length === 0 ? (
         <EmptyState
           title="No Fuel Entries"
@@ -123,13 +127,13 @@ export default function FuelScreen() {
             <ListItem
               title={item.station}
               subtitle={`${formatDate(item.date)} • ${item.liters.toFixed(2)}L • Ron ${(item.price).toFixed(2)}`}
-              leftIcon={<Droplet size={24} color={Colors.primary} />}
+              leftIcon={<Droplet size={24} color={colors.primary} />}
               rightContent={
                 <TouchableOpacity
                   onPress={() => handleDeleteFuel(item.id)}
                   style={styles.deleteButton}
                 >
-                  <Trash2 size={20} color={Colors.error} />
+                  <Trash2 size={20} color={colors.error} />
                 </TouchableOpacity>
               }
               style={styles.fuelItem}
@@ -145,35 +149,39 @@ export default function FuelScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    marginVertical: 48,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text,
-  },
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  fuelItem: {
-    marginBottom: 8,
-  },
-  deleteButton: {
-    padding: 8,
-  },
-});
+function createStyles(theme: 'light' | 'dark') {
+  const colors = Colors[theme];
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 16,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+      marginVertical: 48,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    addButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    listContent: {
+      paddingBottom: 20,
+    },
+    fuelItem: {
+      marginBottom: 8,
+    },
+    deleteButton: {
+      padding: 8,
+    },
+  });
+}

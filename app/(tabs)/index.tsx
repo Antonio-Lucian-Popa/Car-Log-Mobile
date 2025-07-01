@@ -2,11 +2,12 @@ import Card from '@/components/Card';
 import CarSelector from '@/components/CarSelector';
 import EmptyState from '@/components/EmptyState';
 import LoadingScreen from '@/components/LoadingScreen';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useReminderStore } from '@/stores/reminderStore';
 import { useRepairStore } from '@/stores/repairStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Car } from '@/types';
 import { useRouter } from 'expo-router';
 import {
@@ -27,6 +28,10 @@ import {
 
 export default function DashboardScreen() {
   const router = useRouter();
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(theme);
+
   const [refreshing, setRefreshing] = React.useState(false);
 
   const { cars, selectedCar, selectCar, isLoading: carsLoading } = useCarStore();
@@ -123,7 +128,7 @@ export default function DashboardScreen() {
             onPress={() => router.push('/fuel')}
           >
             <View style={styles.iconContainer}>
-              <Droplet size={24} color={Colors.primary} />
+              <Droplet size={24} color={colors.primary} />
             </View>
             <View style={styles.detailsContainer}>
               <Text style={styles.detailTitle}>{latestFuel.station}</Text>
@@ -164,7 +169,7 @@ export default function DashboardScreen() {
             onPress={() => router.push('/repairs')}
           >
             <View style={styles.iconContainer}>
-              <Wrench size={24} color={Colors.secondary} />
+              <Wrench size={24} color={colors.secondary} />
             </View>
             <View style={styles.detailsContainer}>
               <Text style={styles.detailTitle}>{latestRepair.category}</Text>
@@ -207,7 +212,7 @@ export default function DashboardScreen() {
                 onPress={() => router.push('/reminders')}
               >
                 <View style={styles.reminderIconContainer}>
-                  <AlertTriangle size={20} color={Colors.warning} />
+                  <AlertTriangle size={20} color={colors.warning} />
                 </View>
                 <View style={styles.reminderDetails}>
                   <Text style={styles.reminderTitle}>{reminder.type}</Text>
@@ -249,7 +254,7 @@ export default function DashboardScreen() {
             style={styles.actionButton}
             onPress={() => router.push('/fuel/add')}
           >
-            <Droplet size={24} color={Colors.primary} />
+            <Droplet size={24} color={colors.primary} />
             <Text style={styles.actionText}>Add Fuel</Text>
           </TouchableOpacity>
 
@@ -257,7 +262,7 @@ export default function DashboardScreen() {
             style={styles.actionButton}
             onPress={() => router.push('/repairs/add')}
           >
-            <Wrench size={24} color={Colors.secondary} />
+            <Wrench size={24} color={colors.secondary} />
             <Text style={styles.actionText}>Add Repair</Text>
           </TouchableOpacity>
 
@@ -265,7 +270,7 @@ export default function DashboardScreen() {
             style={styles.actionButton}
             onPress={() => router.push('/reminders/add')}
           >
-            <Bell size={24} color={Colors.warning} />
+            <Bell size={24} color={colors.warning} />
             <Text style={styles.actionText}>Add Reminder</Text>
           </TouchableOpacity>
         </View>
@@ -274,140 +279,144 @@ export default function DashboardScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  header: {
-    marginBottom: 16,
-    marginVertical: 48,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.textSecondary,
-    marginTop: 4,
-  },
-  cardContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  detailsContainer: {
-    flex: 1,
-  },
-  detailTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.text,
-    marginBottom: 4,
-  },
-  detailSubtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    marginBottom: 8,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  stat: {
-    flex: 1,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginBottom: 2,
-  },
-  statValue: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: Colors.text,
-  },
-  description: {
-    fontSize: 14,
-    color: Colors.text,
-    marginTop: 4,
-  },
-  emptyStateSmall: {
-    padding: 16,
-    height: 120,
-  },
-  reminderItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  reminderIconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  reminderDetails: {
-    flex: 1,
-  },
-  reminderTitle: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: Colors.text,
-  },
-  reminderDate: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    marginTop: 2,
-  },
-  reminderDescription: {
-    fontSize: 13,
-    color: Colors.text,
-    marginTop: 2,
-  },
-  viewAllButton: {
-    alignItems: 'center',
-    paddingVertical: 12,
-    marginTop: 4,
-  },
-  viewAllText: {
-    fontSize: 14,
-    color: Colors.primary,
-    fontWeight: '500',
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 8,
-  },
-  actionButton: {
-    alignItems: 'center',
-    padding: 16,
-  },
-  actionText: {
-    marginTop: 8,
-    fontSize: 14,
-    color: Colors.text,
-  },
-});
+function createStyles(theme: 'light' | 'dark') {
+  const colors = Colors[theme];
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    contentContainer: {
+      padding: 16,
+      paddingBottom: 32,
+    },
+    header: {
+      marginBottom: 16,
+      marginVertical: 48,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+    cardContent: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+    iconContainer: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: colors.card,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    detailsContainer: {
+      flex: 1,
+    },
+    detailTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 4,
+    },
+    detailSubtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    statsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    stat: {
+      flex: 1,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginBottom: 2,
+    },
+    statValue: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.text,
+    },
+    description: {
+      fontSize: 14,
+      color: colors.text,
+      marginTop: 4,
+    },
+    emptyStateSmall: {
+      padding: 16,
+      height: 120,
+    },
+    reminderItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    reminderIconContainer: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: colors.card,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    reminderDetails: {
+      flex: 1,
+    },
+    reminderTitle: {
+      fontSize: 15,
+      fontWeight: '500',
+      color: colors.text,
+    },
+    reminderDate: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    reminderDescription: {
+      fontSize: 13,
+      color: colors.text,
+      marginTop: 2,
+    },
+    viewAllButton: {
+      alignItems: 'center',
+      paddingVertical: 12,
+      marginTop: 4,
+    },
+    viewAllText: {
+      fontSize: 14,
+      color: colors.primary,
+      fontWeight: '500',
+    },
+    actionsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      paddingVertical: 8,
+    },
+    actionButton: {
+      alignItems: 'center',
+      padding: 16,
+    },
+    actionText: {
+      marginTop: 8,
+      fontSize: 14,
+      color: colors.text,
+    },
+  });
+}

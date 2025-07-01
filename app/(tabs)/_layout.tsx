@@ -1,8 +1,9 @@
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useFuelStore } from '@/stores/fuelStore';
 import { useReminderStore } from '@/stores/reminderStore';
 import { useRepairStore } from '@/stores/repairStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Tabs } from 'expo-router';
 import {
   Bell,
@@ -19,30 +20,31 @@ export default function TabLayout() {
   const { fetchLatestFuel } = useFuelStore();
   const { fetchLatestRepair } = useRepairStore();
   const { fetchActiveReminders } = useReminderStore();
-  
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+
   useEffect(() => {
-    // Fetch initial data when tabs are loaded
     fetchCars();
     fetchLatestFuel();
     fetchLatestRepair();
     fetchActiveReminders();
   }, []);
-  
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textSecondary,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
-          backgroundColor: Colors.card,
-          borderTopColor: Colors.border,
+          backgroundColor: colors.card,
+          borderTopColor: colors.border,
         },
         headerStyle: {
-          backgroundColor: Colors.background,
+          backgroundColor: colors.background,
         },
         headerTitleStyle: {
           fontWeight: '600',
-          color: Colors.text,
+          color: colors.text,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -60,7 +62,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      
       <Tabs.Screen
         name="cars"
         options={{
@@ -72,7 +73,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      
       <Tabs.Screen
         name="fuel"
         options={{
@@ -84,7 +84,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      
       <Tabs.Screen
         name="repairs"
         options={{
@@ -96,7 +95,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      
       <Tabs.Screen
         name="reminders"
         options={{
@@ -108,7 +106,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      
       <Tabs.Screen
         name="settings"
         options={{

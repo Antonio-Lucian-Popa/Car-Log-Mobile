@@ -1,7 +1,8 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
+import { useThemeStore } from '@/stores/themeStore';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -18,47 +19,46 @@ const FUEL_TYPES = ['Gasoline', 'Diesel', 'Electric', 'Hybrid', 'LPG'];
 
 export default function AddCarScreen() {
   const router = useRouter();
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(theme);
+
   const { createCar, isLoading, error } = useCarStore();
-  
+
   const [name, setName] = useState('');
   const [model, setModel] = useState('');
   const [numberPlate, setPlateNumber] = useState('');
   const [year, setYear] = useState('');
   const [fuelType, setFuelType] = useState('Gasoline');
-  
+
   const [nameError, setNameError] = useState('');
   const [modelError, setModelError] = useState('');
   const [plateNumberError, setPlateNumberError] = useState('');
   const [yearError, setYearError] = useState('');
-  
+
   const validateForm = () => {
     let isValid = true;
-    
-    // Reset errors
+
     setNameError('');
     setModelError('');
     setPlateNumberError('');
     setYearError('');
-    
-    // Validate name
+
     if (!name.trim()) {
       setNameError('Car name is required');
       isValid = false;
     }
-    
-    // Validate model
+
     if (!model.trim()) {
       setModelError('Car model is required');
       isValid = false;
     }
-    
-    // Validate plate number
+
     if (!numberPlate.trim()) {
       setPlateNumberError('Plate number is required');
       isValid = false;
     }
-    
-    // Validate year
+
     if (!year.trim()) {
       setYearError('Year is required');
       isValid = false;
@@ -69,10 +69,10 @@ export default function AddCarScreen() {
         isValid = false;
       }
     }
-    
+
     return isValid;
   };
-  
+
   const handleAddCar = async () => {
     if (validateForm()) {
       try {
@@ -83,18 +83,16 @@ export default function AddCarScreen() {
           year: parseInt(year),
           fuelType,
         });
-        
-        Alert.alert(
-          'Success',
-          'Car added successfully',
-          [{ text: 'OK', onPress: () => router.back() }]
-        );
+
+        Alert.alert('Success', 'Car added successfully', [
+          { text: 'OK', onPress: () => router.back() },
+        ]);
       } catch (err) {
         Alert.alert('Error', 'Failed to add car. Please try again.');
       }
     }
   };
-  
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -102,14 +100,14 @@ export default function AddCarScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
       <Stack.Screen options={{ title: 'Add New Car' }} />
-      
-      <ScrollView 
+
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.title}>Car Details</Text>
-        
+
         <Input
           label="Car Name"
           placeholder="e.g. My Honda"
@@ -117,7 +115,7 @@ export default function AddCarScreen() {
           onChangeText={setName}
           error={nameError}
         />
-        
+
         <Input
           label="Model"
           placeholder="e.g. Civic"
@@ -125,7 +123,7 @@ export default function AddCarScreen() {
           onChangeText={setModel}
           error={modelError}
         />
-        
+
         <Input
           label="Plate Number"
           placeholder="e.g. ABC123"
@@ -134,7 +132,7 @@ export default function AddCarScreen() {
           autoCapitalize="characters"
           error={plateNumberError}
         />
-        
+
         <Input
           label="Year"
           placeholder="e.g. 2020"
@@ -143,7 +141,7 @@ export default function AddCarScreen() {
           keyboardType="number-pad"
           error={yearError}
         />
-        
+
         <Text style={styles.label}>Fuel Type</Text>
         <View style={styles.fuelTypeContainer}>
           {FUEL_TYPES.map((type) => (
@@ -157,9 +155,9 @@ export default function AddCarScreen() {
             />
           ))}
         </View>
-        
+
         {error && <Text style={styles.errorText}>{error}</Text>}
-        
+
         <View style={styles.buttonContainer}>
           <Button
             title="Cancel"
@@ -179,50 +177,54 @@ export default function AddCarScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: Colors.text,
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: Colors.text,
-    fontWeight: '500',
-  },
-  fuelTypeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 20,
-  },
-  fuelTypeButton: {
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  errorText: {
-    color: Colors.error,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  button: {
-    flex: 1,
-    marginHorizontal: 8,
-  },
-});
+function createStyles(theme: 'light' | 'dark') {
+  const colors = Colors[theme];
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      padding: 16,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 16,
+    },
+    label: {
+      fontSize: 14,
+      marginBottom: 6,
+      color: colors.text,
+      fontWeight: '500',
+    },
+    fuelTypeContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginBottom: 20,
+    },
+    fuelTypeButton: {
+      marginRight: 8,
+      marginBottom: 8,
+    },
+    errorText: {
+      color: colors.error,
+      marginBottom: 16,
+      textAlign: 'center',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 16,
+    },
+    button: {
+      flex: 1,
+      marginHorizontal: 8,
+    },
+  });
+}

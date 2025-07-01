@@ -1,12 +1,14 @@
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/Colors';
+import { useThemeStore } from '@/stores/themeStore';
 import React, { ReactNode } from 'react';
 import {
-    StyleSheet,
-    Text,
-    TextStyle,
-    TouchableOpacity,
-    View,
-    ViewStyle
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 interface ListItemProps {
@@ -15,9 +17,9 @@ interface ListItemProps {
   rightContent?: ReactNode;
   leftIcon?: ReactNode;
   onPress?: () => void;
-  style?: ViewStyle;
-  titleStyle?: TextStyle;
-  subtitleStyle?: TextStyle;
+  style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  subtitleStyle?: StyleProp<TextStyle>;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
@@ -30,59 +32,67 @@ const ListItem: React.FC<ListItemProps> = ({
   titleStyle,
   subtitleStyle,
 }) => {
+  const { theme } = useThemeStore();
+  const colors = Colors[theme];
+  const styles = createStyles(colors);
+
   const Container = onPress ? TouchableOpacity : View;
-  
+
   return (
-    <Container 
-      style={[styles.container, style]} 
+    <Container
+      style={[styles.container, style]}
       onPress={onPress}
       activeOpacity={0.7}
     >
       {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-      
+
       <View style={styles.textContainer}>
-        <Text style={[styles.title, titleStyle]} numberOfLines={1}>{title}</Text>
+        <Text style={[styles.title, titleStyle]} numberOfLines={1}>
+          {title}
+        </Text>
         {subtitle && (
           <Text style={[styles.subtitle, subtitleStyle]} numberOfLines={2}>
             {subtitle}
           </Text>
         )}
       </View>
-      
+
       {rightContent && <View style={styles.rightContent}>{rightContent}</View>}
     </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: Colors.card,
-    borderRadius: 8,
-    marginVertical: 4,
-  },
-  leftIcon: {
-    marginRight: 12,
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: Colors.text,
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-  },
-  rightContent: {
-    marginLeft: 8,
-  },
-});
+function createStyles(colors: typeof Colors.light | typeof Colors.dark) {
+  return StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 16,
+      backgroundColor: colors.card,
+      borderRadius: 8,
+      marginVertical: 4,
+    },
+    leftIcon: {
+      marginRight: 12,
+    },
+    textContainer: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: colors.text,
+      marginBottom: 2,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
+    rightContent: {
+      marginLeft: 8,
+    },
+  });
+}
 
 export default ListItem;
