@@ -16,11 +16,10 @@ export const useThemeStore = create<ThemeState>((set) => ({
     AsyncStorage.setItem('theme', theme);
     set({ theme });
   },
-  toggleTheme: () => {
+  toggleTheme: () =>
     set((state) => {
       const newTheme = state.theme === 'light' ? 'dark' : 'light';
       AsyncStorage.setItem('theme', newTheme);
       return { theme: newTheme };
-    });
-  },
+    }),
 }));

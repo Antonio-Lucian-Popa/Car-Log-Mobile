@@ -4,7 +4,11 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { useThemeStore } from '@/stores/themeStore'; // importă store-ul temei
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export const unstable_settings = {
   initialRouteName: "(auth)",
@@ -17,6 +21,8 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     ...FontAwesome.font,
   });
+  const [themeLoaded, setThemeLoaded] = useState(false); // adăugat
+  const { setTheme } = useThemeStore(); // din Zustand
 
   useEffect(() => {
     if (error) {
@@ -25,12 +31,21 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    if (loaded && themeLoaded) SplashScreen.hideAsync();
+  }, [loaded, themeLoaded]);
 
-  if (!loaded) {
+  useEffect(() => {
+    const loadTheme = async () => {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        setTheme(storedTheme);
+      }
+      setThemeLoaded(true);
+    };
+    loadTheme();
+  }, []);
+
+  if (!loaded || !themeLoaded) {
     return null;
   }
 
@@ -49,7 +64,7 @@ function RootLayoutNav() {
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
-    
+
     if (!isAuthenticated && !inAuthGroup) {
       // Redirect to the login page if not authenticated
       router.replace("/(auth)/login");
