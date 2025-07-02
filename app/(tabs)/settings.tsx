@@ -114,7 +114,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* Support Section */}
-      <Card title="Support">
+      <Card title="Support(Coming soon)">
         <TouchableOpacity style={styles.supportItem}>
           <HelpCircle size={20} color={colors.text} />
           <Text style={styles.supportText}>Help & FAQ</Text>

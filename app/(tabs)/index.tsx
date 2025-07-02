@@ -179,23 +179,20 @@ export default function DashboardScreen() {
               <Wrench size={24} color={colors.secondary} />
             </View>
             <View style={styles.detailsContainer}>
-              <Text style={styles.detailTitle}>{latestRepair.category}</Text>
+              <Text style={styles.detailTitle} numberOfLines={2}>{latestRepair.description}</Text>
               <Text style={styles.detailSubtitle}>
                 {formatDate(latestRepair.date)}
               </Text>
               <View style={styles.statsRow}>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Cost</Text>
-                  <Text style={styles.statValue}>Ron {formatValue(latestRepair.price)}</Text>
+                  <Text style={styles.statValue}>Ron {formatValue(latestRepair.cost)}</Text>
                 </View>
                 <View style={styles.stat}>
                   <Text style={styles.statLabel}>Odometer</Text>
                   <Text style={styles.statValue}>{latestRepair.odometer ? latestRepair.odometer.toLocaleString('ro-RO') : 'N/A'} km</Text>
                 </View>
               </View>
-              <Text style={styles.description} numberOfLines={2}>
-                {latestRepair.description}
-              </Text>
             </View>
           </TouchableOpacity>
         ) : (
