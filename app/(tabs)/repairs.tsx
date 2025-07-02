@@ -123,8 +123,8 @@ export default function RepairsScreen() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ListItem
-              title={item.category}
-              subtitle={`${formatDate(item.date)} • ${formatPrice(item.price)} • ${item.odometer ?? 'N/A'} km`}
+              title={item.description}
+              subtitle={`${formatDate(item.date)} • ${formatPrice(item.cost)} • ${item.odometer ?? 'N/A'} km`}
               leftIcon={<Wrench size={24} color={colors.secondary} />}
               rightContent={
                 <TouchableOpacity

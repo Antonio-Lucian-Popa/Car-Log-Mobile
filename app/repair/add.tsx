@@ -5,6 +5,7 @@ import Colors from '@/constants/Colors';
 import { useCarStore } from '@/stores/carStore';
 import { useRepairStore } from '@/stores/repairStore';
 import { useThemeStore } from '@/stores/themeStore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -16,6 +17,7 @@ import {
   Text,
   View,
 } from 'react-native';
+
 
 const REPAIR_CATEGORIES = [
   'Oil Change',
@@ -36,7 +38,8 @@ export default function AddRepairScreen() {
   const { cars, selectedCar, selectCar } = useCarStore();
   const { createRepair, isLoading, error } = useRepairStore();
 
-  const [category, setCategory] = useState('');
+  const [repairDate, setRepairDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [odometer, setOdometer] = useState('');
@@ -56,11 +59,6 @@ export default function AddRepairScreen() {
     if (!selectedCar) {
       Alert.alert('Error', 'Please select a car first');
       return false;
-    }
-
-    if (!category.trim()) {
-      setCategoryError('Category is required');
-      isValid = false;
     }
 
     if (!price.trim()) {
@@ -92,11 +90,10 @@ export default function AddRepairScreen() {
       try {
         await createRepair({
           carId: selectedCar!.id,
-          category,
-          price: parseFloat(price),
+          cost: parseFloat(price),
           description,
-          odometer: parseInt(odometer),
-          date: new Date().toISOString(),
+          odometer: odometer ? parseInt(odometer) : 0,
+          date: repairDate.toISOString(),
         });
 
         Alert.alert('Success', 'Repair record added successfully', [
@@ -129,21 +126,25 @@ export default function AddRepairScreen() {
           onSelectCar={selectCar}
         />
 
-        <Text style={styles.label}>Category</Text>
-        <View style={styles.categoryContainer}>
-          {REPAIR_CATEGORIES.map((cat) => (
-            <Button
-              key={cat}
-              title={cat}
-              onPress={() => setCategory(cat)}
-              variant={category === cat ? 'primary' : 'outline'}
-              size="small"
-              style={styles.categoryButton}
+        <Text style={styles.label}>Repair Date</Text>
+        <View>
+          <Button
+            title={repairDate.toDateString()}
+            onPress={() => setShowDatePicker(true)}
+            variant="outline"
+          />
+          {showDatePicker && (
+            <DateTimePicker
+              value={repairDate}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) setRepairDate(selectedDate);
+              }}
             />
-          ))}
+          )}
         </View>
-        {categoryError ? <Text style={styles.errorText}>{categoryError}</Text> : null}
-
         <Input
           label="Price"
           placeholder="e.g. 150.00"

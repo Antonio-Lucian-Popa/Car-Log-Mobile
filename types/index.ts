@@ -27,8 +27,7 @@ export interface FuelEntry {
 export interface RepairEntry {
   id: string;
   carId: string;
-  category: string;
-  price: number;
+  cost: number;
   description: string;
   odometer: number;
   date: string;
